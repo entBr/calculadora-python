@@ -16,11 +16,11 @@ Selecciona una operación e introduce dos números. Se admiten números negativo
 
 - `calculadora.py`: funciones de cálculo independientes de la interfaz.
 - `app.py`: menú, entrada de datos y presentación de resultados.
-- `tests/`: carpeta reservada para los tests que crearás después.
+- `tests/`: pruebas de operaciones, validación de entradas y menú.
 
 ## Practicar la creación de tests
 
-El repositorio se entrega sin tests. Puedes empezar creando `tests/test_calculadora.py` con `unittest` (incluido en Python) o con `pytest`.
+Las pruebas usan `unittest`, incluido en Python, sin paquetes externos. Puedes ampliarlas para practicar nuevos casos o adaptarlas a `pytest`.
 
 Casos sugeridos:
 
@@ -30,7 +30,7 @@ Casos sugeridos:
 - Entrada inválida y selección de opciones en la interfaz.
 - Importar `app` no debe iniciar el menú.
 
-Para ejecutar futuros tests con `unittest`:
+Para ejecutar todos los tests:
 
 ```sh
 python -m unittest discover -s tests -v
