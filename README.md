@@ -36,6 +36,12 @@ Para ejecutar todos los tests:
 python -m unittest discover -s tests -v
 ```
 
+## Pruebas automáticas en GitHub
+
+El workflow `.github/workflows/tests.yml` ejecuta las pruebas con Python 3.10,
+3.11, 3.12, 3.13 y 3.14 en cada push y pull request. También puedes iniciarlo
+manualmente desde la pestaña **Actions** del repositorio.
+
 ## Git
 
 Este directorio es un repositorio Git local. Para revisar los cambios:
