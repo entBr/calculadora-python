@@ -40,6 +40,15 @@ class MenuTests(unittest.TestCase):
                 self.assertIn(f"Resultado: {esperado}\n", salida)
                 self.assertIn("¡Hasta luego!", salida)
 
+    def test_imc_desde_el_menu(self):
+        salida = self.ejecutar_menu(["5", "70", "1,75", "0"])
+        self.assertIn("Resultado: 22.8571\n", salida)
+
+    def test_imc_invalido_permite_continuar(self):
+        salida = self.ejecutar_menu(["5", "70", "0", "5", "70", "1.75", "0"])
+        self.assertIn("Error: altura debe ser positivo y finito.", salida)
+        self.assertIn("Resultado: 22.8571\n", salida)
+
     def test_opcion_invalida_permite_continuar(self):
         salida = self.ejecutar_menu(["9", "1", "2", "3", "0"])
         self.assertIn("Opción inválida", salida)

@@ -2,7 +2,7 @@
 
 import math
 
-from calculadora import dividir, multiplicar, restar, sumar
+from calculadora import dividir, imc, multiplicar, restar, sumar
 
 
 OPERACIONES = {
@@ -10,6 +10,7 @@ OPERACIONES = {
     "2": ("Restar", restar),
     "3": ("Multiplicar", multiplicar),
     "4": ("Dividir", dividir),
+    "5": ("Calcular IMC", imc),
 }
 
 
@@ -27,16 +28,16 @@ def leer_numero(mensaje: str) -> float:
 def main() -> None:
     print("Calculadora en Python")
     while True:
-        print("\n1. Sumar\n2. Restar\n3. Multiplicar\n4. Dividir\n0. Salir")
+        print("\n1. Sumar\n2. Restar\n3. Multiplicar\n4. Dividir\n5. Calcular IMC\n0. Salir")
         opcion = input("Elige una opción: ").strip()
         if opcion == "0":
             print("¡Hasta luego!")
             return
         if opcion not in OPERACIONES:
-            print("Opción inválida. Elige entre 0 y 4.")
+            print("Opción inválida. Elige entre 0 y 5.")
             continue
-        a = leer_numero("Primer número: ")
-        b = leer_numero("Segundo número: ")
+        a = leer_numero("Peso en kilogramos: " if opcion == "5" else "Primer número: ")
+        b = leer_numero("Altura en metros: " if opcion == "5" else "Segundo número: ")
         try:
             resultado = OPERACIONES[opcion][1](a, b)
             print(f"Resultado: {resultado:g}")
