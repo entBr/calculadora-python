@@ -6,7 +6,7 @@ from calculadora import imc
 
 
 def test_imc_correcto():
-    assert imc(70, 1.75) == pytest.approx(30.0)
+    assert imc(70, 1.75) == pytest.approx(22.8571428571)
 
 
 def test_imc_limite_positivo():
