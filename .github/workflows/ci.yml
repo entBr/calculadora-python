@@ -1,4 +1,4 @@
-name: CI de calculadora e IMC
+name: CI y despliegue de calculadora
 
 on:
   push:
@@ -7,6 +7,12 @@ on:
 
 permissions:
   contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   tests:
@@ -23,3 +29,25 @@ jobs:
         run: python -m pip install -r requirements.txt
       - name: Ejecutar pytest
         run: python -m pytest -v
+  deploy:
+    needs: tests
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Obtener código
+        uses: actions/checkout@v6
+      - name: Preparar GitHub Pages
+        uses: actions/configure-pages@v5
+      - name: Preparar sitio estático
+        run: |
+          mkdir _site
+          cp index.html _site/index.html
+      - name: Subir artefacto de Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - name: Desplegar en GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

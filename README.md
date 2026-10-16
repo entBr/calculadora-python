@@ -45,19 +45,14 @@ Para ejecutar todos los tests:
 python -m pytest -v
 ```
 
-## Pruebas automáticas en GitHub
+## CI y despliegue en GitHub
 
-El workflow `.github/workflows/ci.yml` ejecuta las pruebas con Python 3.10
-en cada push a `main`. Instala las dependencias y ejecuta `python -m pytest -v`.
-También puedes iniciarlo manualmente desde **Actions**.
-
-## Publicar la calculadora en GitHub Pages
-
-El workflow `.github/workflows/pages.yml` publica `index.html` en GitHub Pages
-en cada push a `main`; también puedes ejecutarlo manualmente desde **Actions**.
-Para habilitar la publicación inicial, abre **Settings > Pages** del repositorio
-y selecciona **GitHub Actions** como fuente de despliegue. La URL del sitio
-aparecerá en la ejecución del workflow y en **Settings > Pages**.
+El workflow `.github/workflows/ci.yml` ejecuta las pruebas con Python 3.10 y,
+si pasan, publica `index.html` en GitHub Pages. Se inicia en cada push a `main`
+y también se puede ejecutar manualmente desde **Actions**. Para habilitar la
+publicación inicial, selecciona **GitHub Actions** como fuente en
+**Settings > Pages**. La URL aparece en la ejecución del workflow y en
+**Settings > Pages**.
 
 ## Demostración verde rojo verde
 
