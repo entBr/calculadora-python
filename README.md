@@ -51,6 +51,14 @@ El workflow `.github/workflows/ci.yml` ejecuta las pruebas con Python 3.10
 en cada push a `main`. Instala las dependencias y ejecuta `python -m pytest -v`.
 También puedes iniciarlo manualmente desde **Actions**.
 
+## Publicar la calculadora en GitHub Pages
+
+El workflow `.github/workflows/pages.yml` publica `index.html` en GitHub Pages
+en cada push a `main`; también puedes ejecutarlo manualmente desde **Actions**.
+Para habilitar la publicación inicial, abre **Settings > Pages** del repositorio
+y selecciona **GitHub Actions** como fuente de despliegue. La URL del sitio
+aparecerá en la ejecución del workflow y en **Settings > Pages**.
+
 ## Demostración verde rojo verde
 
 1. Ejecutar las pruebas, guardar la implementación en un commit y subirlo a

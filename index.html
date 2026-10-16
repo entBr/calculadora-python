@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f6fa">
+    <meta name="description" content="Calculadora interactiva con operaciones básicas y cálculo de IMC.">
+    <title>Calculadora | Operaciones e IMC</title>
+    <style>
+        :root {
+            color-scheme: light;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            color: #20243a;
+            background: #f5f6fa;
+            font-synthesis: none;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            --muted: #7b8095;
+            --accent: #6558e8;
+            --accent-dark: #5144d2;
+            --border: #e9eaf1;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            min-width: 320px;
+            min-height: 100vh;
+            margin: 0;
+            padding: 48px 20px;
+            display: grid;
+            place-items: center;
+            background:
+                radial-gradient(ellipse at 12% 12%, #eeedff 0, transparent 34%),
+                radial-gradient(ellipse at 90% 88%, #e8f5f2 0, transparent 30%),
+                #f7f8fb;
+        }
+
+        button,
+        input {
+            font: inherit;
+        }
+
+        .app {
+            width: min(100%, 500px);
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 0 0 22px 4px;
+        }
+
+        .brand-icon {
+            width: 42px;
+            height: 42px;
+            display: grid;
+            place-items: center;
+            border-radius: 14px;
+            color: #fff;
+            background: var(--accent);
+            box-shadow: 0 7px 18px #6558e83b;
+            font-size: 23px;
+            font-weight: 600;
+        }
+
+        .brand-name {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 750;
+            letter-spacing: -0.3px;
+        }
+
+        .brand-caption {
+            margin: 3px 0 0;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .calculator {
+            overflow: hidden;
+            border: 1px solid #ececf2;
+            border-radius: 24px;
+            background: #fff;
+            box-shadow: 0 24px 70px #25264a12, 0 3px 10px #25264a08;
+        }
+
+        .calculator-header {
+            padding: 30px 32px 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .eyebrow {
+            margin: 0 0 8px;
+            color: var(--accent);
+            font-size: 11px;
+            font-weight: 750;
+            letter-spacing: 1.3px;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: clamp(25px, 6vw, 31px);
+            letter-spacing: -1.2px;
+        }
+
+        .intro {
+            margin: 8px 0 0;
+            color: var(--muted);
+            font-size: 14px;
+            line-height: 1.55;
+        }
+
+        .calculator-body {
+            padding: 25px 32px 30px;
+        }
+
+        .section-label {
+            margin: 0 0 11px;
+            color: #555a70;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .operation-list {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: 8px;
+            margin-bottom: 24px;
+        }
+
+        .operation {
+            min-height: 60px;
+            padding: 8px 4px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            color: #555a70;
+            background: #fff;
+            cursor: pointer;
+            transition: background 150ms ease, color 150ms ease, border-color 150ms ease, transform 150ms ease;
+        }
+
+        .operation:hover {
+            border-color: #c9c4ff;
+            transform: translateY(-1px);
+        }
+
+        .operation[aria-pressed="true"] {
+            border-color: #d8d4ff;
+            color: var(--accent-dark);
+            background: #f2f0ff;
+        }
+
+        .operation-symbol {
+            display: block;
+            font-size: 20px;
+            font-weight: 650;
+            line-height: 1.1;
+        }
+
+        .operation-name {
+            display: block;
+            margin-top: 5px;
+            font-size: 10px;
+            font-weight: 650;
+        }
+
+        .fields {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555a70;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .field input {
+            width: 100%;
+            height: 50px;
+            padding: 0 14px;
+            border: 1px solid #dfe1e9;
+            border-radius: 11px;
+            outline: none;
+            color: #20243a;
+            background: #fff;
+            font-size: 16px;
+            transition: border-color 150ms ease, box-shadow 150ms ease;
+        }
+
+        .field input::placeholder {
+            color: #afb2c0;
+        }
+
+        .field input:focus {
+            border-color: #8b82f2;
+            box-shadow: 0 0 0 3px #6558e81c;
+        }
+
+        .hint {
+            margin: 9px 0 0;
+            color: var(--muted);
+            font-size: 11px;
+            line-height: 1.5;
+        }
+
+        .calculate {
+            width: 100%;
+            min-height: 51px;
+            margin-top: 23px;
+            border: 0;
+            border-radius: 11px;
+            color: #fff;
+            background: var(--accent);
+            box-shadow: 0 7px 16px #6558e82b;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            transition: background 150ms ease, transform 150ms ease;
+        }
+
+        .calculate:hover {
+            background: var(--accent-dark);
+            transform: translateY(-1px);
+        }
+
+        .calculate:active {
+            transform: translateY(0);
+        }
+
+        .result {
+            min-height: 78px;
+            margin-top: 17px;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            background: #fafaff;
+        }
+
+        .result-copy {
+            min-width: 0;
+        }
+
+        .result-label {
+            margin: 0;
+            color: var(--muted);
+            font-size: 11px;
+            font-weight: 650;
+        }
+
+        .result-message {
+            margin: 5px 0 0;
+            color: #a1a4b3;
+            font-size: 13px;
+        }
+
+        .result-value {
+            flex-shrink: 0;
+            color: var(--accent-dark);
+            font-size: clamp(20px, 5vw, 26px);
+            font-weight: 750;
+            letter-spacing: -0.7px;
+        }
+
+        .result[data-state="success"] {
+            border-color: #dfdcff;
+            background: #f7f6ff;
+        }
+
+        .result[data-state="error"] {
+            border-color: #f1d5d5;
+            background: #fff8f8;
+        }
+
+        .result[data-state="error"] .result-message {
+            color: #b84646;
+        }
+
+        .result[data-state="error"] .result-value {
+            color: #b84646;
+        }
+
+        footer {
+            margin-top: 17px;
+            color: #9296a8;
+            font-size: 11px;
+            text-align: center;
+        }
+
+        @media (max-width: 420px) {
+            body {
+                padding: 28px 14px;
+            }
+
+            .calculator-header {
+                padding: 25px 22px 21px;
+            }
+
+            .calculator-body {
+                padding: 22px;
+            }
+
+            .operation-list {
+                gap: 5px;
+            }
+
+            .operation-name {
+                font-size: 9px;
+            }
+
+            .fields {
+                gap: 10px;
+            }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            *,
+            *::before,
+            *::after {
+                scroll-behavior: auto !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <main class="app">
+        <header class="brand" aria-label="Calculadora Python">
+            <span class="brand-icon" aria-hidden="true">±</span>
+            <div>
+                <p class="brand-name">Calculadora Python</p>
+                <p class="brand-caption">Una herramienta simple para tus cálculos</p>
+            </div>
+        </header>
+
+        <section class="calculator" aria-labelledby="page-title">
+            <div class="calculator-header">
+                <p class="eyebrow">Tu espacio de cálculo</p>
+                <h1 id="page-title">Calculadora</h1>
+                <p class="intro">Elige una operación, introduce los valores y obtén tu resultado al instante.</p>
+            </div>
+
+            <form class="calculator-body" id="calculator-form" novalidate>
+                <p class="section-label" id="operation-label">Selecciona una operación</p>
+                <div class="operation-list" role="group" aria-labelledby="operation-label">
+                    <button class="operation" type="button" data-operation="sumar" aria-pressed="true" aria-label="Sumar">
+                        <span class="operation-symbol" aria-hidden="true">+</span>
+                        <span class="operation-name">Sumar</span>
+                    </button>
+                    <button class="operation" type="button" data-operation="restar" aria-pressed="false" aria-label="Restar">
+                        <span class="operation-symbol" aria-hidden="true">−</span>
+                        <span class="operation-name">Restar</span>
+                    </button>
+                    <button class="operation" type="button" data-operation="multiplicar" aria-pressed="false" aria-label="Multiplicar">
+                        <span class="operation-symbol" aria-hidden="true">×</span>
+                        <span class="operation-name">Multiplicar</span>
+                    </button>
+                    <button class="operation" type="button" data-operation="dividir" aria-pressed="false" aria-label="Dividir">
+                        <span class="operation-symbol" aria-hidden="true">÷</span>
+                        <span class="operation-name">Dividir</span>
+                    </button>
+                    <button class="operation" type="button" data-operation="imc" aria-pressed="false" aria-label="Calcular IMC">
+                        <span class="operation-symbol" aria-hidden="true">♙</span>
+                        <span class="operation-name">IMC</span>
+                    </button>
+                </div>
+
+                <div class="fields">
+                    <div class="field">
+                        <label for="first-number" id="first-label">Primer número</label>
+                        <input id="first-number" name="first-number" type="text" inputmode="decimal" autocomplete="off" placeholder="Ej. 12,5" aria-describedby="input-hint" required>
+                    </div>
+                    <div class="field">
+                        <label for="second-number" id="second-label">Segundo número</label>
+                        <input id="second-number" name="second-number" type="text" inputmode="decimal" autocomplete="off" placeholder="Ej. 3" aria-describedby="input-hint" required>
+                    </div>
+                </div>
+                <p class="hint" id="input-hint">Puedes escribir decimales con punto o coma.</p>
+
+                <button class="calculate" type="submit">Calcular resultado</button>
+
+                <section class="result" id="result" data-state="empty" aria-live="polite" aria-atomic="true">
+                    <div class="result-copy">
+                        <p class="result-label">Resultado</p>
+                        <p class="result-message" id="result-message">Tu resultado aparecerá aquí.</p>
+                    </div>
+                    <output class="result-value" id="result-value" for="first-number second-number"></output>
+                </section>
+            </form>
+        </section>
+
+        <footer>Operaciones básicas e índice de masa corporal</footer>
+    </main>
+
+    <script>
+        const form = document.querySelector("#calculator-form");
+        const operationButtons = document.querySelectorAll(".operation");
+        const firstInput = document.querySelector("#first-number");
+        const secondInput = document.querySelector("#second-number");
+        const firstLabel = document.querySelector("#first-label");
+        const secondLabel = document.querySelector("#second-label");
+        const hint = document.querySelector("#input-hint");
+        const resultPanel = document.querySelector("#result");
+        const resultMessage = document.querySelector("#result-message");
+        const resultValue = document.querySelector("#result-value");
+
+        let selectedOperation = "sumar";
+
+        function clearResult() {
+            resultPanel.dataset.state = "empty";
+            resultMessage.textContent = "Tu resultado aparecerá aquí.";
+            resultValue.textContent = "";
+        }
+
+        function selectOperation(button) {
+            selectedOperation = button.dataset.operation;
+            operationButtons.forEach((operationButton) => {
+                operationButton.setAttribute("aria-pressed", String(operationButton === button));
+            });
+
+            const isImc = selectedOperation === "imc";
+            firstLabel.textContent = isImc ? "Peso (kg)" : "Primer número";
+            secondLabel.textContent = isImc ? "Altura (m)" : "Segundo número";
+            firstInput.placeholder = isImc ? "Ej. 68,5" : "Ej. 12,5";
+            secondInput.placeholder = isImc ? "Ej. 1,72" : "Ej. 3";
+            hint.textContent = isImc
+                ? "Introduce el peso en kilogramos y la altura en metros; ambos deben ser mayores que cero."
+                : "Puedes escribir decimales con punto o coma.";
+            clearResult();
+        }
+
+        function parseNumber(input, label) {
+            const normalized = input.trim().replace(",", ".");
+            if (normalized === "") {
+                throw new Error(`Introduce ${label.toLowerCase()}.`);
+            }
+
+            const number = Number(normalized);
+            if (!Number.isFinite(number)) {
+                throw new Error(`${label} debe ser un número válido y finito.`);
+            }
+            return number;
+        }
+
+        function calculate(first, second) {
+            switch (selectedOperation) {
+                case "sumar":
+                    return { value: first + second, message: "Suma completada" };
+                case "restar":
+                    return { value: first - second, message: "Resta completada" };
+                case "multiplicar":
+                    return { value: first * second, message: "Multiplicación completada" };
+                case "dividir":
+                    if (second === 0) {
+                        throw new Error("No se puede dividir entre cero.");
+                    }
+                    return { value: first / second, message: "División completada" };
+                case "imc":
+                    if (first <= 0 || second <= 0) {
+                        throw new Error("El peso y la altura deben ser mayores que cero.");
+                    }
+                    return { value: first / (second ** 2), message: "Índice de masa corporal (kg/m²)" };
+                default:
+                    throw new Error("Selecciona una operación válida.");
+            }
+        }
+
+        operationButtons.forEach((button) => {
+            button.addEventListener("click", () => selectOperation(button));
+        });
+
+        form.addEventListener("submit", (event) => {
+            event.preventDefault();
+            try {
+                const first = parseNumber(firstInput.value, firstLabel.textContent);
+                const second = parseNumber(secondInput.value, secondLabel.textContent);
+                const result = calculate(first, second);
+
+                if (!Number.isFinite(result.value)) {
+                    throw new Error("El resultado está fuera del rango numérico.");
+                }
+
+                resultPanel.dataset.state = "success";
+                resultMessage.textContent = result.message;
+                resultValue.textContent = new Intl.NumberFormat("es-ES", {
+                    maximumSignificantDigits: 12
+                }).format(result.value);
+            } catch (error) {
+                resultPanel.dataset.state = "error";
+                resultMessage.textContent = error.message;
+                resultValue.textContent = "!";
+            }
+        });
+    </script>
+</body>
+</html>
