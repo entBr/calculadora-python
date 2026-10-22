@@ -75,3 +75,17 @@ Este directorio es un repositorio Git local. Para revisar los cambios:
 git status
 git diff
 ```
+
+## Despliegue en Railway
+
+La interfaz index.html realiza los cálculos en JavaScript. web.py la sirve con Flask; la calculadora de consola permanece en app.py. El contenedor ejecuta Gunicorn y escucha en 0.0.0.0 y el puerto PORT asignado por Railway.
+
+1. En Railway crea un proyecto desde entBr/calculadora-python y selecciona main.
+2. Usa el Dockerfile de la raíz y railway.toml. No agregues un comando de inicio alternativo.
+3. En Source activa autodeploy y Wait for CI. El workflow CI para Railway debe finalizar correctamente antes del despliegue.
+4. Genera un dominio público en Networking. Comprueba / y /health.
+5. Para demostrar CD cambia un texto visible en index.html, haz commit y push a main y conserva el SHA, la ejecución verde y el nuevo deployment automático con el mismo SHA.
+
+El workflow comprueba pytest y construye y prueba el contenedor. El CD lo ejecuta la integración nativa de Railway. No requiere guardar un token de Railway en GitHub.
+
+Pruebas locales: python -m pip install -r requirements.txt -r requirements-web.txt; python -m pytest -v
