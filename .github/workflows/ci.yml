@@ -25,6 +25,7 @@ jobs:
           for i in $(seq 1 30); do
             if curl --fail http://localhost:8080/health; then
               curl --fail http://localhost:8080/
+              python scripts/pruebas_liberacion.py http://localhost:8080
               exit 0
             fi
             sleep 2
