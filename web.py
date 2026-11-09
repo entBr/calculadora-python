@@ -9,4 +9,4 @@ def index():
 
 @app.get('/health')
 def health():
-    return {'status': 'error'}, 200
+    return {'status': 'ok'}, 200
