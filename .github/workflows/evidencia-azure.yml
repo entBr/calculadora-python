@@ -1,0 +1,33 @@
+name: Validacion del paquete para Azure U2
+on:
+  push:
+    branches: [u2-evidencia-rechazo-azure]
+permissions:
+  contents: read
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r azure_release/requirements.txt
+      - name: Validar aplicacion antes de liberar el ZIP
+        working-directory: azure_release
+        run: python -m unittest discover -s tests -v
+  publicar_paquete:
+    needs: pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Empaquetar solo archivos de aplicacion
+        working-directory: azure_release
+        run: zip ../calculadora-azure.zip web.py index.html requirements.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: paquete-azure-validado
+          path: calculadora-azure.zip
+          retention-days: 30
