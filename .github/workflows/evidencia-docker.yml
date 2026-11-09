@@ -1,0 +1,32 @@
+name: Evidencia de rechazo Docker U2
+on:
+  push:
+    branches: [u2-evidencia-rechazo-docker]
+permissions:
+  contents: read
+jobs:
+  pruebas:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r requirements.txt -r requirements-web.txt
+      - run: python -m pytest -v
+  publicar_imagen:
+    needs: pruebas
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+      - name: Construir imagen validada
+        run: docker build -t calculadora-docker:${{ github.sha }} .
+      - name: Guardar imagen
+        run: docker save calculadora-docker:${{ github.sha }} -o calculadora-docker.tar
+      - uses: actions/upload-artifact@v4
+        with:
+          name: imagen-docker-validada
+          path: calculadora-docker.tar
+          retention-days: 1
